@@ -29,20 +29,22 @@ enum PaymentStatus {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  password     String
-  name         String
-  role         Role      @default(CUSTOMER)
-  phone        String?
-  address      String?
-  avatar       String?
-  refreshToken String?   // Lưu hash refresh token để xác thực refresh
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  reviews      Review[]
-  orders       Order[]
-  cartItems    CartItem[]
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  password            String
+  name                String
+  role                Role      @default(CUSTOMER)
+  phone               String?
+  address             String?
+  avatar              String?
+  refreshToken        String?   // Lưu hash refresh token để xác thực refresh
+  failedLoginAttempts Int       @default(0) // Số lần đăng nhập sai liên tiếp
+  lockUntil           DateTime?           // Khóa đến thời điểm nào
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  reviews             Review[]
+  orders              Order[]
+  cartItems           CartItem[]
 
   @@map("users")
 }
@@ -58,6 +60,7 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
+  @@index([parentId])
   @@map("categories")
 }
 
@@ -76,6 +79,7 @@ model Product {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 
+  @@index([categoryId])
   @@map("products")
 }
 
@@ -103,6 +107,7 @@ model ProductVariant {
   cartItems CartItem[]
   orderItems OrderItem[]
 
+  @@index([productId, size, color])
   @@map("product_variants")
 }
 

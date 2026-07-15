@@ -7,6 +7,12 @@ import databaseConfig from './config/database.config';
 import jwtConfig from './config/jwt.config';
 import { envValidationSchema } from './config/env.validation';
 import { PrismaModule } from './database/prisma/prisma.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { ProductsModule } from './modules/products/products.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -20,6 +26,17 @@ import { PrismaModule } from './database/prisma/prisma.module';
       serveRoot: '/uploads',
     }),
     PrismaModule,
+    UsersModule,
+    AuthModule,
+    CategoriesModule,
+    ProductsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}
+
