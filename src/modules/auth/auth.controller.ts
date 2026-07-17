@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Req, Res, UseGuards, HttpStatus, HttpCode, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Put, Body, Req, Res, UseGuards, HttpStatus, HttpCode, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import type { Response, Request } from 'express';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
@@ -120,6 +120,28 @@ export class AuthController {
     const { password: _, refreshToken: __, ...result } = user;
     return {
       message: 'Lấy thông tin tài khoản thành công.',
+      data: result,
+    };
+  }
+
+  /**
+   * Cập nhật thông tin tài khoản hiện tại.
+   */
+  @Put('me')
+  async updateMe(@Req() req: any, @Body() body: { name: string; phone?: string; address?: string }) {
+    if (!body.name) {
+      throw new BadRequestException('Tên không được để trống.');
+    }
+
+    const updatedUser = await this.usersService.update(req.user.id, {
+      name: body.name,
+      phone: body.phone,
+      address: body.address,
+    });
+
+    const { password: _, refreshToken: __, ...result } = updatedUser;
+    return {
+      message: 'Cập nhật thông tin tài khoản thành công.',
       data: result,
     };
   }
