@@ -119,8 +119,11 @@ model Review {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   rating    Int      // 1 đến 5 sao
   comment   String?
+  images    String[] @default([]) // Ảnh thực tế đính kèm
+  isActive  Boolean  @default(true) // Xóa mềm / Ẩn đánh giá
   createdAt DateTime @default(now())
 
+  @@index([productId, isActive])
   @@map("reviews")
 }
 
