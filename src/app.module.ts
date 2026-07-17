@@ -16,6 +16,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
     CartModule,
     OrdersModule,
     ReviewsModule,
+    DashboardModule,
   ],
   providers: [
     {
