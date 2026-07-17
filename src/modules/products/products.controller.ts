@@ -131,9 +131,13 @@ export class ProductsController {
     @Query('minPrice') minPrice?: number,
     @Query('maxPrice') maxPrice?: number,
     @Query('sortBy') sortBy?: string,
+    @Query('onlySale') onlySale?: string,
+    @Query('color') color?: string,
+    @Query('size') size?: string,
   ) {
     const minPriceNum = minPrice !== undefined ? Number(minPrice) : undefined;
     const maxPriceNum = maxPrice !== undefined ? Number(maxPrice) : undefined;
+    const onlySaleBool = onlySale === 'true' || onlySale === '1';
     
     const result = await this.productsService.findAll({
       page,
@@ -143,6 +147,9 @@ export class ProductsController {
       minPrice: minPriceNum,
       maxPrice: maxPriceNum,
       sortBy,
+      onlySale: onlySaleBool,
+      color,
+      size,
     });
 
     return {
@@ -218,7 +225,7 @@ export class ProductsController {
 
   @Post('upload')
   @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.CUSTOMER)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({

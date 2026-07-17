@@ -29,6 +29,9 @@ export class ProductsService {
     minPrice?: number;
     maxPrice?: number;
     sortBy?: string;
+    onlySale?: boolean;
+    color?: string;
+    size?: string;
   }) {
     const page = Math.max(Number(query.page) || 1, 1);
     const limit = Math.max(Number(query.limit) || 10, 1);
@@ -76,6 +79,25 @@ export class ProductsService {
       if (query.maxPrice !== undefined) {
         where.price.lte = query.maxPrice;
       }
+    }
+
+    // 3.1. Lọc sản phẩm khuyến mãi
+    if (query.onlySale) {
+      where.originalPrice = { not: null };
+    }
+
+    // 3.2. Lọc theo màu sắc & kích cỡ biến thể
+    if (query.color || query.size) {
+      const variantFilters: Prisma.ProductVariantWhereInput = {};
+      if (query.color) {
+        variantFilters.color = { equals: query.color, mode: 'insensitive' };
+      }
+      if (query.size) {
+        variantFilters.size = { equals: query.size, mode: 'insensitive' };
+      }
+      where.variants = {
+        some: variantFilters
+      };
     }
 
     // 4. Sắp xếp

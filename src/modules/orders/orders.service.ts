@@ -31,9 +31,10 @@ export class OrdersService {
     return {
       data: orders,
       meta: {
-        total,
-        page: pageNum,
-        limit: limitNum,
+        totalItems: total,
+        currentPage: pageNum,
+        itemsPerPage: limitNum,
+        itemCount: orders.length,
         totalPages,
       },
     };
@@ -117,9 +118,10 @@ export class OrdersService {
     return {
       data: orders,
       meta: {
-        total,
-        page: pageNum,
-        limit: limitNum,
+        totalItems: total,
+        currentPage: pageNum,
+        itemsPerPage: limitNum,
+        itemCount: orders.length,
         totalPages,
       },
     };
